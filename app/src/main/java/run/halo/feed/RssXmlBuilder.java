@@ -50,6 +50,7 @@ public class RssXmlBuilder {
     private Instant lastBuildDate = Instant.now();
     private String requestPath;
     private String externalUrl;
+    private boolean enableRssTracking = false;
 
     public RssXmlBuilder withRss2(RSS2 rss2) {
         this.rss2 = rss2;
@@ -71,6 +72,11 @@ public class RssXmlBuilder {
 
     public RssXmlBuilder withExtractRssTags(String extractRssTags) {
         this.extractRssTags = extractRssTags;
+        return this;
+    }
+
+    public RssXmlBuilder withEnableRssTracking(boolean enableRssTracking) {
+        this.enableRssTracking = enableRssTracking;
         return this;
     }
 
@@ -192,7 +198,7 @@ public class RssXmlBuilder {
             .addCDATA(XmlCharUtils.removeInvalidXmlChar(item.getTitle()));
         itemElement.addElement("link").addText(item.getLink());
 
-        var description = Optional.of(getDescriptionWithTelemetry(item))
+    var description = Optional.of(getDescriptionWithTelemetry(item))
             .map(content -> {
                 if (externalUrl != null) {
                     return new RelativeLinkProcessor(externalUrl)
@@ -277,7 +283,7 @@ public class RssXmlBuilder {
     }
 
     private String getDescriptionWithTelemetry(RSS2.Item item) {
-        if (StringUtils.isBlank(externalUrl)) {
+        if (!enableRssTracking || StringUtils.isBlank(externalUrl)) {
             return item.getDescription();
         }
         var uri = UriComponentsBuilder.fromUriString(item.getLink())

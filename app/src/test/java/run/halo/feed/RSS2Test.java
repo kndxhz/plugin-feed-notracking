@@ -198,4 +198,38 @@ class RSS2Test {
             .assertNext(xml -> assertThat(xml).isEqualToIgnoringWhitespace(expected))
             .verifyComplete();
     }
+
+    @Test
+    void telemetryInjectionWhenEnabled() {
+        var rss = RSS2.builder()
+            .title("title")
+            .description("description")
+            .link("https://example.com")
+            .items(Collections.singletonList(
+                RSS2.Item.builder()
+                    .title("title1")
+                    .description("description1")
+                    .link("https://a.com/posts/1")
+                    .pubDate(Instant.EPOCH)
+                    .guid("guid1")
+                    .build()
+            ))
+            .build();
+
+        var rssXml = new RssXmlBuilder()
+            .withRss2(rss)
+            .withGenerator("Halo")
+            .withEnableRssTracking(true)
+            .withExternalUrl("https://example.com")
+            .toXmlString();
+
+        StepVerifier.create(rssXml)
+            .assertNext(xml -> {
+                assertThat(xml)
+                    .contains("<img src=\"https://example.com/plugins/feed/assets/telemetry.gif")
+                    .contains("title=title1")
+                    .contains("url=/posts/1");
+            })
+            .verifyComplete();
+    }
 }

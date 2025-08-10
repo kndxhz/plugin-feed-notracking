@@ -13,6 +13,7 @@ public class BasicProp {
     private String descriptionType;
     private Integer outputNum;
     private String rssExtraTags;
+    private Boolean enableRssTracking = Boolean.FALSE;
 
     public boolean isExcerptDescriptionType() {
         return DescriptionType.EXCERPT.name().equalsIgnoreCase(descriptionType);
@@ -32,6 +33,9 @@ public class BasicProp {
                 }
                 if (prop.getDescriptionType() == null) {
                     prop.setDescriptionType(DescriptionType.EXCERPT.name());
+                }
+                if (prop.getEnableRssTracking() == null) {
+                    prop.setEnableRssTracking(Boolean.FALSE);
                 }
             });
     }

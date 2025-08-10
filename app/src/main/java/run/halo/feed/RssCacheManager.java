@@ -48,7 +48,10 @@ public class RssCacheManager {
             );
 
         var extractTagsMono = BasicProp.getBasicProp(settingFetcher)
-            .doOnNext(prop -> builder.withExtractRssTags(prop.getRssExtraTags()));
+            .doOnNext(prop -> builder
+                .withExtractRssTags(prop.getRssExtraTags())
+                .withEnableRssTracking(Boolean.TRUE.equals(prop.getEnableRssTracking()))
+            );
 
         return Mono.when(rssMono, generatorMono, extractTagsMono)
             .thenReturn(builder)

@@ -2,6 +2,11 @@ plugins {
     id 'base'
     id "com.github.node-gradle.node" version "7.1.0"
 }
+node {
+    download = true
+    version = '20.17.0'
+    pnpmVersion = '10.12.4'
+}
 
 group 'run.halo.feed.ui'
 

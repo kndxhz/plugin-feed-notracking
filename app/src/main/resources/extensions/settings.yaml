@@ -38,3 +38,9 @@ spec:
           value: ""
           height: 150px
           language: html
+        - $formkit: checkbox
+          name: enableRssTracking
+          label: 启用 RSS 访问跟踪（在描述中注入 1px 像素图）
+          help: 仅在启用时向 RSS 内容追加一个不可见的 1px 图片用于访问统计
+          value: false
+          validation: required
